@@ -1,6 +1,6 @@
 import Foundation
 
-public class ResponseAnalyzer {
+open class ResponseAnalyzer {
     public enum Action: Equatable {
         case success
         case repeatRequest(after: TimeInterval)
@@ -14,7 +14,7 @@ public class ResponseAnalyzer {
         }
     }
     
-    public func analyzeResponse(_ response: VisitedURL, configuration: SwarmConfiguration, previousActions: [Action]) -> Action {
+    open func analyzeResponse(_ response: VisitedURL, configuration: SwarmConfiguration, previousActions: [Action]) -> Action {
         guard let httpResponse = response.response as? HTTPURLResponse else {
             // Non-HTTP response? Cannot analyze that.
             return .success
