@@ -48,7 +48,9 @@ open class Swarm {
     }
     
     public func addURL(_ url: ScrappableURL) {
-        scrapQueue.append(url)
+        let uniqueURLs = Set([url])
+        self.scrapQueue.append(contentsOf: uniqueURLs.subtracting(self.scrappedLog))
+        uniqueURLs.forEach { self.scrappedLog.insert($0) }
     }
     
     func crawl() {
