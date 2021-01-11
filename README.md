@@ -1,13 +1,8 @@
-<div>
+
 <img align="left" width="300" height="300" src="icon.png">
-<br><br><br>
   
 # Swarm
-
-<br>
 Swarm is fast, simple and modular web-scrapping solution written in Swift.
-
-</div><br><br><br>
 
 ## Features
 
@@ -15,6 +10,7 @@ Swarm is fast, simple and modular web-scrapping solution written in Swift.
 - [x] Concurrently working spider instances
 - [x] Automatic request repeat and slow-down when requested by the server
 - [x] Customizable network layer (defaults to `URLSession`)
+- [x] Depth first / breadth first options
 - [x] Cross-platform
 
 ## Quickstart
@@ -43,3 +39,8 @@ class Scrapper: SwarmDelegate {
 }
 ```
 
+## Credits 
+
+Icon created by: 
+
+<a href="https://www.freepik.com/vectors/cartoon">Cartoon vector created by brgfx - www.freepik.com</a>
