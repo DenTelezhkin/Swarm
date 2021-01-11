@@ -1,8 +1,10 @@
 
-<img align="left" width="300" height="300" src="icon.png">
+<img align="left" width="200" height="200" src="icon.png">
   
 # Swarm
 Swarm is fast, simple and modular web-scrapping solution written in Swift.
+
+<br><br><br>
 
 ## Features
 
