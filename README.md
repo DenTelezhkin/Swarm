@@ -1,7 +1,8 @@
 <p align="center">
 <img align="center" width="200" height="200" src="icon.png">
   
-<center> # Swarm </center><br>
+  <p align="justify"> # Swarm  </p>
+  <br>
 Swarm is fast, simple and modular web-scrapping solution written in Swift.
 </p>
 
