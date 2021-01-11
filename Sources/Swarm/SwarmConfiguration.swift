@@ -7,6 +7,12 @@
 
 import Foundation
 
+public enum ScrappingBehavior {
+    case depthFirst
+    case breadthFirst
+    case anyOrder
+}
+
 public struct SwarmConfiguration {
     public init(successStatusCodes: [Int] = [200],
                   delayedRetryStatusCodes: [Int] = [202],
@@ -16,7 +22,8 @@ public struct SwarmConfiguration {
                   maxAutoThrottleDelay: TimeInterval = 30.0,
                   autoThrottleRequestRetries: Int = 2,
                   downloadDelay: TimeInterval = 1.0,
-                  maxConcurrentConnections: Int = 8) {
+                  maxConcurrentConnections: Int = 8,
+                  scrappingBehavior : ScrappingBehavior = .anyOrder) {
         self.successStatusCodes = successStatusCodes
         self.delayedRetryStatusCodes = delayedRetryStatusCodes
         self.delayedRetryDelay = delayedRetryDelay
@@ -26,6 +33,7 @@ public struct SwarmConfiguration {
         self.autoThrottleRequestRetries = autoThrottleRequestRetries
         self.downloadDelay = downloadDelay
         self.maxConcurrentConnections = maxConcurrentConnections
+        self.scrappingBehavior = scrappingBehavior
     }
     var successStatusCodes : [Int]
     
@@ -44,4 +52,6 @@ public struct SwarmConfiguration {
     var downloadDelay: TimeInterval
     
     var maxConcurrentConnections: Int
+    
+    var scrappingBehavior: ScrappingBehavior
 }

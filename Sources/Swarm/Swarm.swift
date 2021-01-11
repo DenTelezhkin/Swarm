@@ -59,7 +59,7 @@ open class Swarm {
         }
         guard spiders.keys.count < configuration.maxConcurrentConnections else { return }
         for _ in 0..<(configuration.maxConcurrentConnections - spiders.keys.count) {
-            guard let scrapUrl = scrapQueue.popLast() else {
+            guard let scrapUrl = takeNextURL() else {
                 return
             }
             guard let spider = delegate?.spider(for: scrapUrl) else {
@@ -73,6 +73,24 @@ open class Swarm {
                                                         error: error),
                                              spider: spider)
             }
+        }
+    }
+    
+    func takeNextURL() -> ScrappableURL? {
+        switch configuration.scrappingBehavior {
+            case .anyOrder: return scrapQueue.popLast()
+            case .depthFirst:
+                guard let maxDepth = scrapQueue.enumerated().max(by: { first, second in
+                    first.element.depth < second.element.depth
+                }) else { return nil }
+                scrapQueue.remove(at: maxDepth.offset)
+                return maxDepth.element
+            case .breadthFirst:
+                guard let minDepth = scrapQueue.enumerated().min(by: { first, second in
+                    first.element.depth < second.element.depth
+                }) else { return nil }
+                scrapQueue.remove(at: minDepth.offset)
+                return minDepth.element
         }
     }
     

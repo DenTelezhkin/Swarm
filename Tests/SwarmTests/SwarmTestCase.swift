@@ -43,7 +43,10 @@ final class SwarmTestCase: XCTestCase {
     }
     
     var mockURLS: [URL] {
-        [URL(string: "https://www.google.com")].compactMap { $0 }
+        [
+            URL(string: "https://www.google.com"),
+            URL(string: "https://www.apple.com")
+        ].compactMap { $0 }
     }
     
     func testScrappingCompletedIsReported() {
@@ -68,7 +71,7 @@ final class SwarmTestCase: XCTestCase {
         mockDelegate.mockSpiderConfiguration = {
             $0.stubFailure(error: MockError(), statusCode: 404)
         }
-        swarm = Swarm(startURLs: mockURLS, delegate: mockDelegate)
+        swarm = Swarm(startURLs: mockURLS.dropLast(), delegate: mockDelegate)
         swarm?.start()
         waitForExpectations(timeout: 1)
     }
@@ -92,8 +95,42 @@ final class SwarmTestCase: XCTestCase {
         mockDelegate.scrapCompleted = {
             completedExp.fulfill()
         }
-        swarm = Swarm(startURLs: mockURLS, configuration: .init(delayedRetryDelay: 0.5, downloadDelay: 0), delegate: mockDelegate)
+        swarm = Swarm(startURLs: mockURLS.dropLast(), configuration: .init(delayedRetryDelay: 0.5, downloadDelay: 0), delegate: mockDelegate)
         swarm?.start()
         waitForExpectations(timeout: 1)
+    }
+    
+    func testDepthFirstLogic() {
+        let exp = expectation(description: "Correct order")
+        let swarm = Swarm(startURLs: [], configuration: .init(scrappingBehavior: .depthFirst), delegate: mockDelegate)
+        mockURLS.enumerated().forEach { swarm.addURL(.init(url: $0.element, depth: $0.offset)) }
+        var index = 1
+        mockDelegate.nextURLs = { visited in
+            XCTAssertEqual(index, visited.origin.depth)
+            index -= 1
+            if index == 0 {
+                exp.fulfill()
+            }
+            return []
+        }
+        swarm.start()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testBreadthFirstLogic() {
+        let exp = expectation(description: "Correct order")
+        let swarm = Swarm(startURLs: [], configuration: .init(scrappingBehavior: .breadthFirst), delegate: mockDelegate)
+        mockURLS.enumerated().forEach { swarm.addURL(.init(url: $0.element, depth: $0.offset)) }
+        var index = 0
+        mockDelegate.nextURLs = { visited in
+            XCTAssertEqual(index, visited.origin.depth)
+            index += 1
+            if index == 2 {
+                exp.fulfill()
+            }
+            return []
+        }
+        swarm.start()
+        waitForExpectations(timeout: 1, handler: nil)
     }
 }
