@@ -47,8 +47,8 @@ class Scrapper: SwarmDelegate {
 
 ## Requirements
 
-- Xcode 11 and higher
-- Swift 5 and higher
+- Xcode 12 and higher
+- Swift 5.3 and higher
 - iOS 10 / macOS 10.12 / tvOS 10.0 / watchOS 3.0
 
 > Although, if you are doing web scrapping on an Apple Watch, your use-case must be pretty wild :)
