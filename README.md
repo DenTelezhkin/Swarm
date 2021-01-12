@@ -76,10 +76,10 @@ pod 'Swarm'
 After initializing Swarm with starting URL's, you might add more using following method:
 
 ```swift
-swarm.addURL(ScrappableURL(url: newURL, depth: desiredDepth))
+swarm.add(ScrappableURL(url: newURL, depth: desiredDepth))
 ```
 
-Also, you can add more URL's to scrap a a result of `scrappedURL(_:nextScrappableURLs:)` delegate method callback:
+Also, you can add more URL's to scrap as a result of `scrappedURL(_:nextScrappableURLs:)` delegate method callback:
 
 ```swift
 nextScrappableURLs([ScrappableURL(url: nextURL)])
@@ -87,7 +87,7 @@ nextScrappableURLs([ScrappableURL(url: nextURL)])
 
 Please note, that there is no need to check those URL's for uniqueness, as internally URL's are stored in `Set`, and while scraping is in progress, visited URL's are saved in a log.
 
-> Keep in mind, that calling `nextScrappableURLs` closure is required in `scrappedURL(_:nextScrappableURLs:)` delegate method, as Swarm is waiting for all such closures to be called in order to complete web-scraping.
+> Keep in mind, that calling `nextScrappableURLs` closure in `scrappedURL(_:nextScrappableURLs:)` delegate method is required, as Swarm is waiting for all such closures to be called in order to complete web-scraping.
 
 ## Configuration
 
@@ -100,14 +100,15 @@ Please note, that there is no need to check those URL's for uniqueness, as inter
 * Max auto-throttling delay (Swarm will try to adhere to "Retry-After" response header, but delay will not be larger than specified in this variable)
 * Max authothrottled request retries before giving up
 * Download delay (cooldown for each of the spiders)
-* Max concurrent connections (max amount of spiders working in parallel, for example, for download delay 1 second, and 8 concurrent connections, equates to approximately 8 requests in a second)
-* Scrapping behavior (described in next section)
+* Max concurrent connections
+
+> Example: downloadDelay = 1, .maxConcurrentConnections = 8 equates to approximately 8 requests in a second, excluding parsing time
 
 ## Depth or breadth?
 
-Web-page can contain several links to follow, and depending on your agenda, you may want to go deeper or wide(e.g. do I want to get all items on the page first, and then load details on each of them, or vice-versa).
+Web-page can contain several links to follow, and depending on your agenda, you may want to go deeper or wider (e.g. do I want to get all items on the page first, and then load details on each of them, or vice-versa).
 
-By default, Swarm operates as LIFO queue, ignoring depth entirely. You can, however, require depth first, or breadth first by setting this in `SwarmConfiguration` object:
+By default, Swarm operates as LIFO queue, ignoring depth entirely. You can, however, require depth first by setting this value in `SwarmConfiguration` object:
 
 ```swift
 configuration.scrappingBehavior = .depthFirst
@@ -127,13 +128,13 @@ func spider(for url: ScrappableURL) -> Spider {
     spider.httpShouldHandleCookies = true
     spider.userAgent = .static("com.my_app.custom_user_agent")
     spider.requestModifier = {
-            var request = $0
-            // Modify URLRequest instance for each request
-            request.timeoutInterval = 20
-            return request
-        }
+        var request = $0
+        // Modify URLRequest instance for each request
+        request.timeoutInterval = 20
+        return request
+    }
     // Modify HTTP headers
-    spider.httpHeaders["Authorization":"Basic dGVzdDp0ZXN0"]
+    spider.httpHeaders["Authorization"] = "Basic dGVzdDp0ZXN0"
 
     return spider
 }
@@ -149,6 +150,8 @@ public protocol Spider {
 }
 ```
 
+Example of such implementation can be found in unit tests for `Swarm`, where [`MockSpider`](https://github.com/DenTelezhkin/Swarm/blob/main/Tests/SwarmTests/MockSpider.swift#L11) is used to stub all network requests in test suite.
+
 ## Spider lifecycle
 
 A picture in this case is worth a thousand words.
@@ -157,7 +160,41 @@ A picture in this case is worth a thousand words.
 
 ## Being a friendly neighborhood web-scraper
 
+With great tools comes great responsibility. You may be tempted to decrease download cooldown, increase parallelism, and dowload everything at speeds of your awesome gigabit Ethernet. Don't do that, please :)
 
+First of all, going slower might actually mean that scrapping succeeds, and you won't get banned on servers you are trying to get data from. Also, going slower means that you will put less strain on servers, and will allow them to not slow down everyones (and yours) requests while server is processing all data requests it received.
+
+Read [scrapy Common Practices doc](https://docs.scrapy.org/en/latest/topics/practices.html#avoiding-getting-banned), which generally applies to this framework too (in principle).
+
+To expand on avoiding getting banned section of that doc, here are some tips for Swarm usage:
+
+Use pool of rotating user-agents:
+
+```swift
+spider.userAgent = .randomized(["com.my_app.custom_user_agent", "com.my_app.very_custom_user_agent"])
+```
+
+Disable cookies:
+
+```swift
+spider.httpShouldHandleCookies = false
+```
+
+If you are hitting retry responses, slow-down by bumping up cooldown on spiders, and reducing concurrency:
+
+```swift
+configuration.downloadDelay = 2
+configuration.maxConcurrentConnections = 5
+```
+
+To monitor retry responses, implement following delegate method, in which you can observe why `Swarm` decided to delay following request:
+
+```swift
+func delayingRequest(to url: ScrappableURL, for timeInterval: TimeInterval, becauseOf response: URLResponse?) {
+  // Try inspecting (response as? HTTPURLResponse)?.statusCode
+  // Also: (response as? HTTPURLResponse)?.allHeaderFields
+}
+```
 
 ## FAQ
 
@@ -165,15 +202,17 @@ A picture in this case is worth a thousand words.
 
 Well, depends. This project is built with simplicity in mind, as well as working on Apple platforms first, and Linux later. It works for my use case, but if you have more complex use case, you should look at [scrapy](https://docs.scrapy.org/en/latest/), which has much more features, as well as enterprise support.
 
+Also, this project is written in Swift, while scrapy is written in Python, which can be both an upside and a downside, depending on where you are coming from.
+
 ### Why don't you have a built-in mechanism for extracting data?
 
-This again goes back to simplicity. You might like [SwiftSoup](https://github.com/scinfu/SwiftSoup) for HTML parsing or you might like [Kanna](https://github.com/tid-kijyun/Kanna) to use XPath for extracting data. Maybe you even need a headless browser to render your web-pages first. With current approach, you basically install `Swarm`, and you can use any parsing library you need(if any).
+This again goes back to simplicity. You might like [SwiftSoup](https://github.com/scinfu/SwiftSoup) for HTML parsing or you might like [Kanna](https://github.com/tid-kijyun/Kanna) to use XPath for extracting data. Maybe you even need a headless browser to render your web-pages first. With current approach, you install `Swarm`, and use any parsing library you need (if any).
 
 ### Is there a CLI?
 
-No, and it's not planned. Building a Mac app [is trivial nowadays](https://developer.apple.com/documentation/swiftui/app) with just several lines of code, this making a need for CLI obsolete at this moment.
+No, and it's not planned. Building a Mac app [is trivial nowadays](https://developer.apple.com/documentation/swiftui/app) with just several lines of code, thus making a need for CLI obsolete at this moment.
 
-### What features are planned?
+### What's on the roadmap?
 
 Depending on interest from community and my own usage of the framework, following features might be implemented:
 
@@ -182,6 +221,7 @@ Depending on interest from community and my own usage of the framework, followin
 - [ ] Automatic sitemap parsing
 - [ ] Automatic link detection with domain restrictions
 - [ ] External storage for history of visited pages
+- [ ] Other stuff I'm currently not aware of
 
 ## License
 

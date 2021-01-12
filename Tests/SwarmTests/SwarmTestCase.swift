@@ -103,7 +103,7 @@ final class SwarmTestCase: XCTestCase {
     func testDepthFirstLogic() {
         let exp = expectation(description: "Correct order")
         let swarm = Swarm(startURLs: [], configuration: .init(scrappingBehavior: .depthFirst), delegate: mockDelegate)
-        mockURLS.enumerated().forEach { swarm.addURL(.init(url: $0.element, depth: $0.offset)) }
+        mockURLS.enumerated().forEach { swarm.add(.init(url: $0.element, depth: $0.offset)) }
         var index = 1
         mockDelegate.nextURLs = { visited in
             XCTAssertEqual(index, visited.origin.depth)
@@ -120,7 +120,7 @@ final class SwarmTestCase: XCTestCase {
     func testBreadthFirstLogic() {
         let exp = expectation(description: "Correct order")
         let swarm = Swarm(startURLs: [], configuration: .init(scrappingBehavior: .breadthFirst), delegate: mockDelegate)
-        mockURLS.enumerated().forEach { swarm.addURL(.init(url: $0.element, depth: $0.offset)) }
+        mockURLS.enumerated().forEach { swarm.add(.init(url: $0.element, depth: $0.offset)) }
         var index = 0
         mockDelegate.nextURLs = { visited in
             XCTAssertEqual(index, visited.origin.depth)
