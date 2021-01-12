@@ -212,6 +212,14 @@ This again goes back to simplicity. You might like [SwiftSoup](https://github.co
 
 No, and it's not planned. Building a Mac app [is trivial nowadays](https://developer.apple.com/documentation/swiftui/app) with just several lines of code, thus making a need for CLI obsolete at this moment.
 
+### Is there support for Carthage package manager?
+
+At this moment, no. There's no Xcode project in repository, and Carthage [does not directly support](https://github.com/Carthage/Carthage/issues/1226) using project generated from SwiftPM.
+
+You can, however, work around this by following [this guide](https://fuller.li/posts/using-swift-package-manager-with-carthage/).
+
+On the reason why I'm not including Xcode project in this repo - it's personal, I'm just very tired of managing dependencies using Carthage, which I find extremely slow, and extremely likely to break. CocoaPods, while judged by some people, is extremely popular, and has been working in production for me for years with much less issues then Carthage. Also, Swift Package Manager is currently my dependency manager of choice, as it has Xcode integration and actually beats CocoaPods in compilation speeds and simplicity.
+
 ### What's on the roadmap?
 
 Depending on interest from community and my own usage of the framework, following features might be implemented:
@@ -220,6 +228,7 @@ Depending on interest from community and my own usage of the framework, followin
 - [ ] Automatic robots.txt parsing
 - [ ] Automatic sitemap parsing
 - [ ] Automatic link detection with domain restrictions
+- [ ] Example usage on a server with [Vapor](https://github.com/vapor/vapor).
 - [ ] External storage for history of visited pages
 - [ ] Other stuff I'm currently not aware of
 
