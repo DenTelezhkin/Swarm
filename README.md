@@ -151,6 +151,10 @@ public protocol Spider {
 
 ## Spider lifecycle
 
+A picture in this case is worth a thousand words.
+
+<img src="diagram.png"/>
+
 ## Being a friendly neighborhood web-scraper
 
 
