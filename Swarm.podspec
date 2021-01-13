@@ -11,6 +11,6 @@ Pod::Spec.new do |spec|
   spec.tvos.deployment_target = '10.0'
   spec.osx.deployment_target = '10.12'
   spec.watchos.deployment_target = '3.0'
-  spec.source = { :git => 'https://github.com/DenTelezhkin/Swarm.git', :tag => s.version.to_s }
+  spec.source = { :git => 'https://github.com/DenTelezhkin/Swarm.git', :tag => spec.version.to_s }
   spec.source_files  = "Sources/Swarm/*.{swift}"
 end
