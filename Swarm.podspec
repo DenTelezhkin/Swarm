@@ -1,6 +1,6 @@
 Pod::s.new do |s|
   s.name         = "Swarm"
-  s.version      = "0.0.1"
+  s.version      = "0.1.0"
   s.summary      = "Simple, fast, modular Web-scrapping engine written in Swift"
   s.homepage     = "https://github.com/DenTelezhkin/Swarm"
   s.license  = 'MIT'
