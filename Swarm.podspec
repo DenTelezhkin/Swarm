@@ -1,4 +1,4 @@
-Pod::s.new do |s|
+Pod::Spec.new do |s|
   s.name         = "Swarm"
   s.version      = "0.1.0"
   s.summary      = "Simple, fast, modular Web-scrapping engine written in Swift"
