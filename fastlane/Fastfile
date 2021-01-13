@@ -62,7 +62,7 @@ lane :build_watchos do
   xcodebuild(
     build: true,
     destination: "OS=7.2,name=Apple Watch Series 6 - 44mm",
-    scheme: 'Swarm-Package'
+    scheme: 'Swarm'
   )
 end
 
