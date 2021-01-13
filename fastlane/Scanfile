@@ -1,0 +1,4 @@
+clean true
+output_types ""
+scheme "Swarm-Package"
+skip_slack true
