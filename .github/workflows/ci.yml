@@ -80,3 +80,12 @@ jobs:
           bundle install --jobs 4 --retry 3
       - name: CocoaPods spec lint
         run: bundle exec fastlane pod_lint
+  linux:
+    name: "Test (Linux)"
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Swift 5.3 Docker Container
+      uses: docker://swift:5.3-xenial
+    - uses: actions/checkout@v2
+    - name: Run tests
+      run: bundle exec fastlane test_linux

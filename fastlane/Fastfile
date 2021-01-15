@@ -49,6 +49,10 @@ lane :test_macos do
   scan(destination: "arch=x86_64")
 end
 
+lane :test_linux do
+  sh "swift test --enable-test-discovery"
+end
+
 lane :build_watchos_xcode11 do
   generate_project
   xcodebuild(
