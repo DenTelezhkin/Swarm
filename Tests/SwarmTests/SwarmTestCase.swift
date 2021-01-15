@@ -1,6 +1,9 @@
 import XCTest
 @testable import Swarm
-
+import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 struct MockError: Error {}
 
 class MockSwarmDelegate : SwarmDelegate {

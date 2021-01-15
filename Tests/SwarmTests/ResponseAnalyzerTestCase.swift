@@ -1,4 +1,8 @@
 import XCTest
+import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 @testable import Swarm
 
 final class ResponseAnalyzerTestCase: XCTestCase {
