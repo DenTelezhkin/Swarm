@@ -62,7 +62,7 @@ class Scrapper: SwarmDelegate {
 If you build a package, based on Swarm, add following code to Package.swift:
 
 ```swift
-.package(url: "https://github.com/DenTelezkin/Swarm.git", .upToNextMajor(from: "0.1.0"))
+.package(url: "https://github.com/DenTelezhkin/Swarm.git", .upToNextMajor(from: "0.1.0"))
 ```
 
 ### CocoaPods
