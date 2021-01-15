@@ -24,6 +24,9 @@
 // THE SOFTWARE.
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public protocol Spider {
     init(url: ScrappableURL)

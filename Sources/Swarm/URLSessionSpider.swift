@@ -24,6 +24,9 @@
 // THE SOFTWARE.
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// `Spider` based on `Foundation.URLSession` class.
 open class URLSessionSpider: Spider {

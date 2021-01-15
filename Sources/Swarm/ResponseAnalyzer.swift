@@ -24,6 +24,9 @@
 // THE SOFTWARE.
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// Object, responsible for server response analysis. It analyzes status codes, previous actions on specified URL, as well as `Retry-After` HTTP header to determine next course of action.
 open class ResponseAnalyzer {

@@ -24,6 +24,9 @@
 // THE SOFTWARE.
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// Object, containing URL to be scraped and it's depth
 public struct ScrappableURL: Hashable {

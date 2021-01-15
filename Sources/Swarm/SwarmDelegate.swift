@@ -24,6 +24,9 @@
 // THE SOFTWARE.
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// Interface for communicating with `Swarm` object.
 public protocol SwarmDelegate: class {
