@@ -61,6 +61,6 @@ class MockSpider : Spider {
 
 private extension HTTPURLResponse {
     static func withStatus(_ statusCode: Int) -> HTTPURLResponse {
-        return HTTPURLResponse(url: NSURL() as URL, statusCode: statusCode, httpVersion: "HTTP/1.1", headerFields: nil)!
+        return HTTPURLResponse(url: URL(fileURLWithPath: ""), statusCode: statusCode, httpVersion: "HTTP/1.1", headerFields: nil)!
     }
 }
