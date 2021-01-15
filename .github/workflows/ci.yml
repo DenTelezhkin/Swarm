@@ -87,5 +87,15 @@ jobs:
     - name: Swift 5.3 Docker Container
       uses: docker://swift:5.3-xenial
     - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-
+    - name: Bundle install
+      run: |
+        bundle config path vendor/bundle
+        bundle install --jobs 4 --retry 3
     - name: Run tests
       run: bundle exec fastlane test_linux
