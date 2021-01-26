@@ -64,6 +64,10 @@ open class Swarm {
     /// Date, when scrapping ended
     private var endDate: Date?
     
+    public var cooldown : (TimeInterval, @escaping () -> ()) -> () = { interval, closure in
+        DispatchQueue.main.asyncAfter(deadline: .now() + interval, execute: closure)
+    }
+    
     /// Time between `endDate` and `startDate` in seconds. If scrapping was not started, this property returns nil.
     public var scrappingDuration: TimeInterval? {
         guard let start = startDate else {
@@ -158,7 +162,7 @@ open class Swarm {
     }
     
     func repeatRequest(url: ScrappableURL, spider: Spider, afterDelay delay: TimeInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+        cooldown(delay) { [weak self] in
             spider.request { data, response, error in
                 self?.receivedSpiderResponse(VisitedURL(origin: url,
                                                         data: data,
@@ -191,7 +195,7 @@ open class Swarm {
         crawl()
         
         // Current spider is on cooldown, continue after configuration.downloadDelay
-        DispatchQueue.main.asyncAfter(deadline: .now() + configuration.downloadDelay) { [weak self] in
+        cooldown(configuration.downloadDelay) { [weak self] in
             self?.scrappedLog.insert(url)
             self?.spiders.removeValue(forKey: url)
             self?.actionLog.removeValue(forKey: url)
