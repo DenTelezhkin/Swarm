@@ -57,7 +57,7 @@ final class SwarmTestCase: XCTestCase {
         mockDelegate.scrapCompleted = {
             exp.fulfill()
         }
-        swarm = Swarm(startURLs: mockURLS, delegate: mockDelegate)
+        swarm = Swarm(startURLs: mockURLS, configuration: .init(downloadDelay: 0.5), delegate: mockDelegate)
         swarm?.start()
         waitForExpectations(timeout: 1)
     }
