@@ -4,8 +4,7 @@
 
 ![CI](https://github.com/DenTelezhkin/Swarm/workflows/CI/badge.svg)
 [![codecov.io](https://codecov.io/github/DenTelezhkin/Swarm/coverage.svg?branch=main)](https://codecov.io/github/DenTelezhkin/Swarm?branch=main)
-![CocoaPod platform](https://cocoapod-badges.herokuapp.com/p/Swarm/badge.svg)
-![CocoaPod version](https://cocoapod-badges.herokuapp.com/v/Swarm/badge.svg)
+![Platform OS X | iOS | tvOS | watchOS | Linux](https://img.shields.io/badge/platform-Linux%20%7C%20OS%20X%20%7C%20iOS%20%7C%20tvOS%20%7C%20watchOS-orange.svg)
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)]()
 
@@ -49,7 +48,7 @@ class Scrapper: SwarmDelegate {
 
 - Xcode 12 and higher
 - Swift 5.3 and higher
-- iOS 10 / macOS 10.12 / tvOS 10.0 / watchOS 3.0
+- iOS 10 / macOS 10.12 / Linux / tvOS 10.0 / watchOS 3.0
 
 > Although, if you are doing web scrapping on an Apple Watch, your use-case must be pretty wild :)
 
