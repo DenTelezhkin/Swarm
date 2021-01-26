@@ -64,6 +64,15 @@ open class Swarm {
     /// Date, when scrapping ended
     private var endDate: Date?
     
+    /// Cooldown runner for delaying next request. Defaults to DispatchQueue.main.asyncAfter(deadline:execute:) method
+    /// - Important: If you are running Swarm in SwiftNIO environment, such as Vapor, in order for cooldown to work properly,
+    /// you should replace it using event loop scheduling, for example:
+    ///
+    /// ```
+    /// swarm.cooldown = { interval, closure in
+    ///    eventLoop.scheduleTask(in: TimeAmount.seconds(Int64(interval)), closure)
+    /// }
+    /// ```
     public var cooldown : (TimeInterval, @escaping () -> ()) -> () = { interval, closure in
         DispatchQueue.main.asyncAfter(deadline: .now() + interval, execute: closure)
     }

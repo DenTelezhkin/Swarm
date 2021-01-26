@@ -158,6 +158,18 @@ A picture in this case is worth a thousand words.
 
 <img src="diagram.png"/>
 
+## Managing cooldown in Vapor app using SwiftNIO
+
+By default, Swarm uses `DispatchQueue.main.asyncAfter(deadline:execute:)` method to execute a delay between network requests. This is fine for a Mac app, but if you are running in server environment such as Vapor, you should not be using main thread to schedule anything. In fact, dispatching work to main thread might not even work.
+
+In order to properly execute a cooldown in Vapor app, set `cooldown` on `Swarm` instance in a following way:
+
+```swift
+swarm.cooldown = { interval, closure in
+    eventLoop.scheduleTask(in: TimeAmount.seconds(Int64(interval)), closure)
+}
+```
+
 ## Being a friendly neighborhood web-scraper
 
 With great tools comes great responsibility. You may be tempted to decrease download cooldown, increase parallelism, and dowload everything at speeds of your awesome gigabit Ethernet. Don't do that, please :)
@@ -224,7 +236,7 @@ On the reason why I'm not including Xcode project in this repo - it's personal, 
 
 Depending on interest from community and my own usage of the framework, following features might be implemented:
 
-- [ ] Linux support
+- [x] Linux support
 - [ ] Automatic robots.txt parsing
 - [ ] Automatic sitemap parsing
 - [ ] Automatic link detection with domain restrictions
