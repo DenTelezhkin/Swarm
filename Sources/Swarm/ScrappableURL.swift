@@ -37,13 +37,17 @@ public struct ScrappableURL: Hashable {
     /// URL to be scraped
     public let url : URL
     
+    /// Storage for values or objects related to this scrappable URL
+    public let userInfo: [AnyHashable: AnyHashable]
+    
     /// Creates `ScrappableURL` object.
     /// - Parameters:
     ///   - url: address of the web page to be scrapped
     ///   - depth: depth of URL in website hierarchy. Defaults to 1.
-    public init(url: URL, depth: Int = 1) {
+    public init(url: URL, depth: Int = 1, userInfo: [AnyHashable: AnyHashable] = [:]) {
         self.depth = depth
         self.url = url
+        self.userInfo = userInfo
     }
 }
 
