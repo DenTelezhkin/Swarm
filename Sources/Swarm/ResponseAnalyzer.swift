@@ -59,9 +59,17 @@ open class ResponseAnalyzer {
     ///   - previousActions: previous actions taken on URL, that is currently being scraped
     /// - Returns: Proposed action.
     open func analyzeResponse(_ response: VisitedURL, configuration: SwarmConfiguration, previousActions: [Action]) -> Action {
+        if response.response == nil, response.data == nil {
+            // Server timeout
+            if previousActions.retryCount() < configuration.delayedRequestRetries {
+                return .repeatRequest(after: configuration.delayedRetryDelay)
+            } else {
+                return .failure
+            }
+        }
         guard let httpResponse = response.response as? HTTPURLResponse else {
             // Non-HTTP response? Cannot analyze that.
-            return .success
+            return .failure
         }
         switch httpResponse.statusCode {
             case configuration.successStatusCodes: return .success

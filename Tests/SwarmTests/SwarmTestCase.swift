@@ -58,6 +58,9 @@ final class SwarmTestCase: XCTestCase {
             exp.fulfill()
         }
         swarm = Swarm(startURLs: mockURLS, configuration: .init(downloadDelay: 0.5), delegate: mockDelegate)
+        mockDelegate.mockSpiderConfiguration = {
+            $0.stubSuccess()
+        }
         swarm?.start()
         waitForExpectations(timeout: 1)
     }
@@ -116,6 +119,9 @@ final class SwarmTestCase: XCTestCase {
             }
             return []
         }
+        mockDelegate.mockSpiderConfiguration = {
+            $0.stubSuccess()
+        }
         swarm.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
@@ -132,6 +138,9 @@ final class SwarmTestCase: XCTestCase {
                 exp.fulfill()
             }
             return []
+        }
+        mockDelegate.mockSpiderConfiguration = {
+            $0.stubSuccess()
         }
         swarm.start()
         waitForExpectations(timeout: 1, handler: nil)

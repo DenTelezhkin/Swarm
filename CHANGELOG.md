@@ -12,6 +12,10 @@ swarm.cooldown = { interval, closure in
 }
 ```
 
+### Changed
+
+* Absence of response and data is now treated as failure for network request ( request timeout ), and request is retried `configuration.delayedRequestRetries` times after `configuration.delayedRetryDelay`
+
 ## [0.1.0](https://github.com/DenTelezhkin/Swarm/releases/tag/0.1.0)
 
 * Initial release

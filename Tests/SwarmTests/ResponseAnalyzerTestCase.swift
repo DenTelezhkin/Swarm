@@ -60,4 +60,11 @@ final class ResponseAnalyzerTestCase: XCTestCase {
         
         XCTAssertEqual(result, .failure)
     }
+    
+    func testAbsenceOfResponseShouldBeTreatedAsTimeout() {
+        let result = ResponseAnalyzer()
+            .analyzeResponse(VisitedURL(origin: .init(url: URL(fileURLWithPath: "")), data: nil, response: nil, error: NSError(domain: kCFErrorDomainCFNetwork as String, code: 1001, userInfo: [:])), configuration: configuration, previousActions: [])
+        
+        XCTAssertEqual(result, .repeatRequest(after: 5))
+    }
 }
