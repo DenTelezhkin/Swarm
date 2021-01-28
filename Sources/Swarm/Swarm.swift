@@ -160,7 +160,12 @@ open class Swarm {
     
     func receivedSpiderResponse(_ url: VisitedURL, spider: Spider) {
         let action = responseAnalyzer.analyzeResponse(url, configuration: configuration, previousActions: actionLog[url.origin] ?? [])
-        actionLog[url.origin]?.append(action)
+        if var actions = actionLog[url.origin] {
+            actions.append(action)
+        } else {
+            actionLog[url.origin] = [action]
+        }
+        
         switch action {
             case .failure: processFailure(url)
             case .success: processSuccess(url)

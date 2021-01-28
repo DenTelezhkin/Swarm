@@ -16,6 +16,10 @@ swarm.cooldown = { interval, closure in
 
 * Absence of response and data is now treated as failure for network request ( request timeout ), and request is retried `configuration.delayedRequestRetries` times after `configuration.delayedRetryDelay`
 
+### Fixed
+
+* Action log for previous requests is now properly stored, thus allowing correct number of request retries.
+
 ## [0.1.0](https://github.com/DenTelezhkin/Swarm/releases/tag/0.1.0)
 
 * Initial release

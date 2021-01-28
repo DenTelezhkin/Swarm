@@ -103,6 +103,10 @@ final class SwarmTestCase: XCTestCase {
         }
         swarm = Swarm(startURLs: mockURLS.dropLast(), configuration: .init(delayedRetryDelay: 0.5, downloadDelay: 0), delegate: mockDelegate)
         swarm?.start()
+        XCTAssertEqual(swarm?.actionLog.count, 1)
+        XCTAssertEqual(swarm?.actionLog[ScrappableURL(url:mockURLS.first!)], [
+            .repeatRequest(after: 0.5)
+        ])
         waitForExpectations(timeout: 1)
     }
     
