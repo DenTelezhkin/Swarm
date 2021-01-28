@@ -162,6 +162,7 @@ open class Swarm {
         let action = responseAnalyzer.analyzeResponse(url, configuration: configuration, previousActions: actionLog[url.origin] ?? [])
         if var actions = actionLog[url.origin] {
             actions.append(action)
+            actionLog[url.origin] = actions
         } else {
             actionLog[url.origin] = [action]
         }
