@@ -59,6 +59,10 @@ open class URLSessionSpider: Spider {
         self.url = url
     }
     
+    deinit {
+        currentTask = nil
+    }
+    
     /// Creates `URLRequest` to send for `url`.
     /// - Parameter url: web address of the page to scrap
     /// - Returns: Configured `URLRequest` instance.
@@ -72,7 +76,7 @@ open class URLSessionSpider: Spider {
         return requestModifier(request)
     }
     
-    private var currentTask: URLSessionTask?
+    var currentTask: URLSessionTask?
     
     /// Sends request to `url`.
     /// - Parameter completion: completion closure to run when response is received.
