@@ -149,6 +149,10 @@ public protocol Spider {
 
 Example of such implementation can be found in unit tests for `Swarm`, where [`MockSpider`](https://github.com/DenTelezhkin/Swarm/blob/main/Tests/SwarmTests/MockSpider.swift#L11) is used to stub all network requests in test suite.
 
+## Using Vapor HTTPClient as network transport for Swarm
+
+There are several reasons why you might want to use Vapor HTTPClient to send network requests. One - it works much better with proxies, and does not require [a lot of workarounds](https://github.com/vapor/vapor/issues/1723). Second - you are working on specific event loops, and don't break Vapor concurrency model by dispatching to networking queues, which URLSession does.
+
 ## Spider lifecycle
 
 A picture in this case is worth a thousand words.

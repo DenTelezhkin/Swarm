@@ -45,6 +45,11 @@ fastlane test_tvos13
 fastlane test_macos
 ```
 
+### test_linux
+```
+fastlane test_linux
+```
+
 ### build_watchos_xcode11
 ```
 fastlane build_watchos_xcode11
