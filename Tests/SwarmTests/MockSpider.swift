@@ -12,11 +12,8 @@ import FoundationNetworking
 import Swarm
 
 class MockSpider : Spider {
-    let url : ScrappableURL
     
-    required init(url: ScrappableURL) {
-        self.url = url
-    }
+    init() {}
     
     @discardableResult func stubResponse(_ data: Data? = nil, _ response: URLResponse? = nil, _ error: Error? = nil) -> Self {
         self.data = data
@@ -50,7 +47,7 @@ class MockSpider : Spider {
     
     var requestCount = 0
     
-    func request(completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    func request(url: ScrappableURL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
         requestCount += 1
         if let conditionalSetup = conditionalSetup {
             conditionalSetup(self)

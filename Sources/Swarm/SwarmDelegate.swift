@@ -61,7 +61,7 @@ public extension SwarmDelegate {
     
     /// Default protocol implementation, creates `URLSessionSpider` with `url`.
     func spider(for url: ScrappableURL) -> Spider {
-        URLSessionSpider(url: url)
+        URLSessionSpider()
     }
     
     /// Default empty protocol implementation

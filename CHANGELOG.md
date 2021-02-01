@@ -1,5 +1,10 @@
 ## Next
 
+### Breaking
+
+* `Spider` protocol no longer requires `init(url:)` initializer, `url` parameter is passed in `request(url:completion:)` method instead.
+* `URLSessionSpider` now has `init()` method without parameters.
+
 ### Added
 
 * Linux support

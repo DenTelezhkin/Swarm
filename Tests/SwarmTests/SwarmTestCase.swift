@@ -21,7 +21,7 @@ class MockSwarmDelegate : SwarmDelegate {
     }
     
     func spider(for url: ScrappableURL) -> Spider {
-        let spider = MockSpider(url: url)
+        let spider = MockSpider()
         mockSpiderConfiguration(spider)
         return spider
     }

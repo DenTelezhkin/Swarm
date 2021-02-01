@@ -29,9 +29,7 @@ import FoundationNetworking
 #endif
 
 public protocol Spider {
-    init(url: ScrappableURL)
-    
-    func request(completion: @escaping (Data?, URLResponse?, Error?) -> Void)
+    func request(url: ScrappableURL, completion: @escaping (Data?, URLResponse?, Error?) -> Void)
 }
 
 /// Class, managing scrapping logic. Maintain strong reference to object of this class while scrapping is in progress.
@@ -130,7 +128,7 @@ open class Swarm {
                 return
             }
             spiders[scrapUrl] = spider
-            spider.request { [weak self] data, response, error in
+            spider.request(url: scrapUrl) { [weak self] data, response, error in
                 self?.receivedSpiderResponse(VisitedURL(origin: scrapUrl,
                                                         data: data,
                                                         response: response,
@@ -178,7 +176,7 @@ open class Swarm {
     
     func repeatRequest(url: ScrappableURL, spider: Spider, afterDelay delay: TimeInterval) {
         cooldown(delay) { [weak self] in
-            spider.request { data, response, error in
+            spider.request(url: url) { data, response, error in
                 self?.receivedSpiderResponse(VisitedURL(origin: url,
                                                         data: data,
                                                         response: response,

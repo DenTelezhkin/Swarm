@@ -50,13 +50,8 @@ open class URLSessionSpider: Spider {
     /// Closure, that is run just before URLRequest is sent, to allow last-minute modifications to URLRequest.
     public var requestModifier : (URLRequest) -> URLRequest = { $0 }
     
-    /// URL, that is being scraped.
-    let url: ScrappableURL
-    
     /// Creates `URLSessionSpider`
-    /// - Parameter url: url to scrap.
-    required public init(url: ScrappableURL) {
-        self.url = url
+    required public init() {
     }
     
     deinit {
@@ -80,7 +75,7 @@ open class URLSessionSpider: Spider {
     
     /// Sends request to `url`.
     /// - Parameter completion: completion closure to run when response is received.
-    public func request(completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    public func request(url: ScrappableURL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
         currentTask = session.dataTask(with: urlRequest(for: url)) { data, response, error in
             completion(data, response, error)
         }
