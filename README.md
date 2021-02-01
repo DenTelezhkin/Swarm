@@ -61,7 +61,7 @@ class Scrapper: SwarmDelegate {
 If you build a package, based on Swarm, add following code to Package.swift:
 
 ```swift
-.package(url: "https://github.com/DenTelezhkin/Swarm.git", .upToNextMajor(from: "0.1.0"))
+.package(url: "https://github.com/DenTelezhkin/Swarm.git", .upToNextMajor(from: "0.2.0"))
 ```
 
 ### CocoaPods
@@ -121,7 +121,7 @@ By default, `Swarm` uses `Foundation.URLSession` as network transport for all ne
 
 ```swift
 func spider(for url: ScrappableURL) -> Spider {
-    let spider = URLSessionSpider(url: url)
+    let spider = URLSessionSpider()
 
     // Handle cookies instead of ignoring them
     spider.httpShouldHandleCookies = true
@@ -143,9 +143,7 @@ You can also implement your own network transport, if you need, by implementing 
 
 ```swift
 public protocol Spider {
-    init(url: ScrappableURL)
-
-    func request(completion: @escaping (Data?, URLResponse?, Error?) -> Void)
+    func request(url: ScrappableURL, completion: @escaping (Data?, URLResponse?, Error?) -> Void)
 }
 ```
 

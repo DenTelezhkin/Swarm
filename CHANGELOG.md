@@ -1,5 +1,7 @@
 ## Next
 
+## [0.2.0](https://github.com/DenTelezhkin/Swarm/releases/tag/0.2.0)
+
 ### Breaking
 
 * `Spider` protocol no longer requires `init(url:)` initializer, `url` parameter is passed in `request(url:completion:)` method instead.
