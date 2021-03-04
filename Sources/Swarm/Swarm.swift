@@ -111,6 +111,10 @@ open class Swarm {
         let uniqueURLs = Set([url])
         self.scrapQueue.append(contentsOf: uniqueURLs.subtracting(self.scrappedLog))
         uniqueURLs.forEach { self.scrappedLog.insert($0) }
+        if startDate != nil {
+            // Scrapping in progress, load new url if there are available spiders
+            crawl()
+        }
     }
     
     func crawl() {

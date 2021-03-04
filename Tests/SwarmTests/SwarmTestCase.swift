@@ -8,7 +8,7 @@ struct MockError: Error {}
 
 class MockSwarmDelegate : SwarmDelegate {
     
-    var mockSpiderConfiguration : (MockSpider) -> () = { _ in }
+    var mockSpiderConfiguration : (ScrappableURL, MockSpider) -> () = { _,_ in }
     
     var scrapCompleted : () -> () = {}
     func scrappingCompleted() {
@@ -22,7 +22,7 @@ class MockSwarmDelegate : SwarmDelegate {
     
     func spider(for url: ScrappableURL) -> Spider {
         let spider = MockSpider()
-        mockSpiderConfiguration(spider)
+        mockSpiderConfiguration(url, spider)
         return spider
     }
     
@@ -59,7 +59,7 @@ final class SwarmTestCase: XCTestCase {
         }
         swarm = Swarm(startURLs: mockURLS, configuration: .init(downloadDelay: 0.5), delegate: mockDelegate)
         mockDelegate.mockSpiderConfiguration = {
-            $0.stubSuccess()
+            $1.stubSuccess()
         }
         swarm?.start()
         waitForExpectations(timeout: 1)
@@ -75,7 +75,7 @@ final class SwarmTestCase: XCTestCase {
             completedExp.fulfill()
         }
         mockDelegate.mockSpiderConfiguration = {
-            $0.stubFailure(error: MockError(), statusCode: 404)
+            $1.stubFailure(error: MockError(), statusCode: 404)
         }
         swarm = Swarm(startURLs: mockURLS.dropLast(), delegate: mockDelegate)
         swarm?.start()
@@ -86,7 +86,7 @@ final class SwarmTestCase: XCTestCase {
         let retryExp = expectation(description: "retry")
         let completedExp = expectation(description: "completed")
         mockDelegate.mockSpiderConfiguration = {
-            $0.conditionallyStub { spider in
+            $1.conditionallyStub { spider in
                 if spider.requestCount == 1 {
                     spider.stubFailure(error: MockError(), statusCode: 202)
                 } else {
@@ -124,7 +124,7 @@ final class SwarmTestCase: XCTestCase {
             return []
         }
         mockDelegate.mockSpiderConfiguration = {
-            $0.stubSuccess()
+            $1.stubSuccess()
         }
         swarm.start()
         waitForExpectations(timeout: 1, handler: nil)
@@ -144,7 +144,32 @@ final class SwarmTestCase: XCTestCase {
             return []
         }
         mockDelegate.mockSpiderConfiguration = {
-            $0.stubSuccess()
+            $1.stubSuccess()
+        }
+        swarm.start()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testAddingURLLoadsItImmediatelyIfThereAreAvailableSpiders() {
+        let exp = expectation(description: "Second URL loaded")
+        let swarm = Swarm(startURLs: [mockURLS.first!], delegate: mockDelegate)
+        mockDelegate.nextURLs = { [weak self] visited in
+            if visited.origin.depth == 1 {
+                swarm.add(ScrappableURL(url: self!.mockURLS.last!, depth: 2))
+            } else if visited.origin.depth == 2 {
+                exp.fulfill()
+            }
+            return []
+        }
+        mockDelegate.mockSpiderConfiguration = { url, spider in
+            if url.depth == 1 {
+                spider.stubInfiniteLoading()
+            } else {
+                spider.stubSuccess()
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            swarm.add(ScrappableURL(url: self.mockURLS.last!, depth: 2))
         }
         swarm.start()
         waitForExpectations(timeout: 1, handler: nil)

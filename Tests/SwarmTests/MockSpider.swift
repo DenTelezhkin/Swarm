@@ -12,27 +12,32 @@ import FoundationNetworking
 import Swarm
 
 class MockSpider : Spider {
+    enum Response {
+        case response(Data?, URLResponse?, Error?)
+        case infiniteLoading
+    }
+    
+    var mockResponse: Response?
     
     init() {}
     
     @discardableResult func stubResponse(_ data: Data? = nil, _ response: URLResponse? = nil, _ error: Error? = nil) -> Self {
-        self.data = data
-        self.response = response
-        self.error = error
+        mockResponse = .response(data, response, error)
         return self
     }
     
     @discardableResult func stubSuccess(data: Data = .init(), statusCode: Int = 200) -> Self {
-        self.data = data
-        self.response = HTTPURLResponse.withStatus(statusCode)
-        self.error = nil
+        mockResponse = .response(data, HTTPURLResponse.withStatus(statusCode), nil)
         return self
     }
     
     @discardableResult func stubFailure(error: Error, statusCode: Int) -> Self {
-        self.data = nil
-        self.error = error
-        self.response = HTTPURLResponse.withStatus(statusCode)
+        mockResponse = .response(nil, HTTPURLResponse.withStatus(statusCode), error)
+        return self
+    }
+    
+    @discardableResult func stubInfiniteLoading() -> Self {
+        mockResponse = .infiniteLoading
         return self
     }
     
@@ -41,10 +46,6 @@ class MockSpider : Spider {
         conditionalSetup = closure
     }
     
-    var data: Data? = nil
-    var response: URLResponse? = nil
-    var error: Error? = nil
-    
     var requestCount = 0
     
     func request(url: ScrappableURL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
@@ -52,7 +53,12 @@ class MockSpider : Spider {
         if let conditionalSetup = conditionalSetup {
             conditionalSetup(self)
         }
-        completion(data, response, error)
+        switch mockResponse {
+            case .response(let data, let response, let error):
+                completion(data, response, error)
+            case .infiniteLoading: ()
+            case .none: ()
+        }
     }
 }
 
