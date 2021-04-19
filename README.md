@@ -54,15 +54,26 @@ class Scrapper: SwarmDelegate {
 
 ## Installation
 
-### Swift Package Manager(requires Xcode 11)
+### Swift Package Manager
 
-* Add package into Project settings -> Swift Packages
+To install Swarm using SPM, please add the following to your Package.swift file.
 
-If you build a package, based on Swarm, add following code to Package.swift:
+dependencies: [
+    ...
+    .package(url: "https://github.com/DenTelezhkin/Swarm.git", .upToNextMajor(from: "0.3.0"))
+],
+...
+targets: [
+    .target(
+        name: ...
+        dependencies: [
+            ...,
+            "Swarm"
+        ]
+    )
+]
 
-```swift
-.package(url: "https://github.com/DenTelezhkin/Swarm.git", .upToNextMajor(from: "0.2.0"))
-```
+Alternatively, use Xcode UI (Project settings -> Swift Packages), if you don't need separate package.
 
 ### CocoaPods
 
