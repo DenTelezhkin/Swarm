@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## Next
 
+## [0.3.0](https://github.com/DenTelezhkin/Swarm/releases/tag/0.3.0)
+
 ### Changed
 
 * When url is added via `add(_:)` method, and there are available spiders, scrapping starts immediately instead of waiting for previous urls to finish.
