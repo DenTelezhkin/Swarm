@@ -58,6 +58,7 @@ class Scrapper: SwarmDelegate {
 
 To install Swarm using SPM, please add the following to your Package.swift file.
 
+```
 dependencies: [
     ...
     .package(url: "https://github.com/DenTelezhkin/Swarm.git", .upToNextMajor(from: "0.3.0"))
@@ -72,6 +73,7 @@ targets: [
         ]
     )
 ]
+```
 
 Alternatively, use Xcode UI (Project settings -> Swift Packages), if you don't need separate package.
 
