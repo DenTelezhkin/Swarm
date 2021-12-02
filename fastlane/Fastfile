@@ -80,6 +80,7 @@ lane :generate_code_coverage do
   slather(
     proj: "Swarm.xcodeproj",
     scheme: "Swarm-Package",
+    binary_basename: "Swarm",
     # arch: "x86_64",
     verbose: true,
     cobertura_xml: true
