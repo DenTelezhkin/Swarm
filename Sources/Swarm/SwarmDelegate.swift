@@ -29,7 +29,7 @@ import FoundationNetworking
 #endif
 
 /// Interface for communicating with `Swarm` object.
-public protocol SwarmDelegate: class {
+public protocol SwarmDelegate: AnyObject {
     
     /// Networking transport for scrapping provided `url`.
     /// - Parameter url: url to scrap
